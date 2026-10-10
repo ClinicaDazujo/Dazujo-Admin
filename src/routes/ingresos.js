@@ -1,25 +1,23 @@
 const express = require('express');
 const db = require('../db');
 const sucursales = require('../sucursales');
-const { MARCAS, TOMOX_SUCURSALES } = require('../constants');
+const { MARCAS } = require('../constants');
 
 const router = express.Router();
 
-// Dazujo y Laboratorio facturan en cualquier clinica activa de Dazujo; Tomox
-// solo en sus propias sucursales.
-function sucursalValidaParaIngreso(sucursal, marca) {
-  if (marca === 'tomox') return TOMOX_SUCURSALES.includes(sucursal) && sucursales.existeActiva(sucursal);
+// Todas las marcas facturan en cualquier clinica activa de Dazujo.
+function sucursalValidaParaIngreso(sucursal) {
   return sucursales.existeActiva(sucursal);
 }
 
-function validarIngreso(body, marca) {
+function validarIngreso(body) {
   const requeridos = ['sucursal', 'mes', 'monto'];
   for (const campo of requeridos) {
     if (body[campo] === undefined || body[campo] === null || body[campo] === '') {
       return `Falta el campo: ${campo}`;
     }
   }
-  if (!sucursalValidaParaIngreso(body.sucursal, marca)) return 'Sucursal invalida';
+  if (!sucursalValidaParaIngreso(body.sucursal)) return 'Sucursal invalida';
   if (!/^\d{4}-\d{2}$/.test(body.mes)) return 'Mes invalido, usa el formato AAAA-MM';
   if (Number.isNaN(Number(body.monto)) || Number(body.monto) < 0) return 'El monto debe ser un numero valido';
   return null;
@@ -32,7 +30,7 @@ router.get('/', (req, res) => {
 
 router.post('/', (req, res) => {
   const marca = MARCAS.includes(req.body.marca) ? req.body.marca : 'dazujo';
-  const error = validarIngreso(req.body, marca);
+  const error = validarIngreso(req.body);
   if (error) return res.status(400).json({ error });
 
   const { sucursal, mes } = req.body;

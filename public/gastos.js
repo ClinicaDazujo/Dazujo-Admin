@@ -32,7 +32,6 @@ let gastosCache = [];
 let paginaActual = 1;
 let sucursalesDisponibles = [];
 let sucursalesTodas = [];
-let tomoxSucursales = [];
 
 const fmtMoneda = (n) => Number(n).toLocaleString('es-MX', { style: 'currency', currency: 'MXN' });
 
@@ -56,17 +55,15 @@ function llenarFiltroMesAnio() {
 
 async function cargarConfig() {
   const res = await fetch('/api/config');
-  const { sucursales, tiposGasto, tomoxSucursales: tomoxDeConfig } = await res.json();
+  const { sucursales, tiposGasto } = await res.json();
 
   sucursalesTodas = sucursales;
-  tomoxSucursales = tomoxDeConfig;
   selectTipoGasto.innerHTML = tiposGasto.map((t) => `<option value="${t}">${t}</option>`).join('');
   actualizarUIporMarca();
 }
 
 function sucursalesParaMarca() {
   const marca = marcaActual();
-  if (marca === 'tomox') return sucursalesTodas.filter((s) => tomoxSucursales.includes(s));
   if (marca === 'laboratorio') return [];
   return sucursalesTodas;
 }

@@ -56,11 +56,10 @@ const TIPOS_GASTO = [
   'Otros',
 ];
 
-// Marcas/unidades de negocio que comparten la misma app. Tomox opera dentro
-// de un subconjunto fijo de sucursales de Dazujo; Laboratorio no se registra
-// por sucursal (su gasto es unico), por eso usa una sucursal ficticia fija.
+// Marcas/unidades de negocio que comparten la misma app. Tomox usa las mismas
+// sucursales activas que Dazujo; Laboratorio no se registra por sucursal (su
+// gasto es unico), por eso usa una sucursal ficticia fija.
 const MARCAS = ['dazujo', 'tomox', 'laboratorio'];
-const TOMOX_SUCURSALES = ['Parras', 'Torreón', 'Ixtlero', 'Flores', 'Centro', 'Mirasierra'];
 const SUCURSAL_LABORATORIO = 'Laboratorio';
 
 // Meta mensual de ingreso fija por clinica (se aplica igual todos los meses).
@@ -77,4 +76,4 @@ const METAS_MENSUALES = {
   Centro: 390000,
 };
 
-module.exports = { SUCURSALES_INICIALES, TIPOS_GASTO, METAS_MENSUALES, MARCAS, TOMOX_SUCURSALES, SUCURSAL_LABORATORIO };
+module.exports = { SUCURSALES_INICIALES, TIPOS_GASTO, METAS_MENSUALES, MARCAS, SUCURSAL_LABORATORIO };

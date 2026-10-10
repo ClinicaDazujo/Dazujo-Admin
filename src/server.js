@@ -10,7 +10,7 @@ const proyeccionRouter = require('./routes/proyeccion');
 const authRouter = require('./routes/auth');
 const usuariosRouter = require('./routes/usuarios');
 const sucursalesRouter = require('./routes/sucursales');
-const { TIPOS_GASTO, METAS_MENSUALES, TOMOX_SUCURSALES, SUCURSAL_LABORATORIO } = require('./constants');
+const { TIPOS_GASTO, METAS_MENSUALES, SUCURSAL_LABORATORIO } = require('./constants');
 const sucursales = require('./sucursales');
 const { requireAuth, requireAdmin } = require('./auth');
 const { iniciarCron } = require('./cron');
@@ -46,7 +46,6 @@ app.get('/api/config', requireAuth, (req, res) => {
     sucursales: sucursales.listarActivas(),
     tiposGasto: TIPOS_GASTO,
     metasMensuales: METAS_MENSUALES,
-    tomoxSucursales: TOMOX_SUCURSALES,
     sucursalLaboratorio: SUCURSAL_LABORATORIO,
   });
 });

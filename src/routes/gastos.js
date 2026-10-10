@@ -5,7 +5,7 @@ const crypto = require('crypto');
 const multer = require('multer');
 const db = require('../db');
 const { enviarCSV, enviarXLSX } = require('../export');
-const { TIPOS_GASTO, MARCAS, TOMOX_SUCURSALES, SUCURSAL_LABORATORIO } = require('../constants');
+const { TIPOS_GASTO, MARCAS, SUCURSAL_LABORATORIO } = require('../constants');
 const sucursalesDb = require('../sucursales');
 const { calcularDivision, nuevoGrupoId } = require('../division');
 
@@ -56,7 +56,6 @@ function paraExportar(gastos) {
 // sucursal ficticia fija (el gasto de Laboratorio no se reparte por clinica).
 function sucursalValidaParaMarca(sucursal, marca) {
   if (marca === 'laboratorio') return sucursal === SUCURSAL_LABORATORIO;
-  if (marca === 'tomox') return TOMOX_SUCURSALES.includes(sucursal) && sucursalesDb.existeActiva(sucursal);
   return sucursalesDb.existeActiva(sucursal);
 }
 
