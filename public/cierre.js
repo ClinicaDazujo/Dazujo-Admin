@@ -121,29 +121,25 @@ function resumen(mes, sucursal) {
   return { ingreso, gasto, utilidad, margen };
 }
 
-let TOMOX_SUCURSALES = [];
-
 async function cargarConfig() {
   const res = await fetch('/api/config');
   const data = await res.json();
   SUCURSALES = data.sucursales;
-  TOMOX_SUCURSALES = data.tomoxSucursales || [];
 
   actualizarSucursalesUI();
 }
 
-// Sucursales con las que se puede registrar un ingreso: Dazujo y Laboratorio
-// facturan en cualquier clinica de Dazujo; Tomox solo en sus propias sucursales.
+// Sucursales con las que se puede registrar un ingreso: todas las marcas
+// facturan en cualquier clinica activa de Dazujo.
 function sucursalesParaIngreso() {
-  return marcaActual() === 'tomox' ? TOMOX_SUCURSALES : SUCURSALES;
+  return SUCURSALES;
 }
 
 // Sucursales con las que se arma el tablero, la tendencia y el comparar:
-// Tomox usa solo sus propias sucursales; Laboratorio no se reparte por
-// clinica (su gasto es unico), asi que no ofrece desglose por sucursal.
+// Tomox usa las mismas que Dazujo; Laboratorio no se reparte por clinica
+// (su gasto es unico), asi que no ofrece desglose por sucursal.
 function sucursalesDelNegocio() {
   const marca = marcaActual();
-  if (marca === 'tomox') return TOMOX_SUCURSALES;
   if (marca === 'laboratorio') return [];
   return SUCURSALES;
 }
