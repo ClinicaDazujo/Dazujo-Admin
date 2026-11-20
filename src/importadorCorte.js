@@ -28,6 +28,7 @@ const ALIAS_SUCURSAL = [
   ['IXTLERO', 'Ixtlero'],
   ['CENTRO', 'Centro'],
   ['PARRAS', 'Parras'],
+  ['ETNIAS', 'Etnias'],
   ['OFICINA', 'Oficina'],
 ];
 

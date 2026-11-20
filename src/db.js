@@ -141,6 +141,34 @@ for (const nombre of SUCURSALES_INICIALES) {
   sembrarSucursal.run(nombre);
 }
 
+// Migraciones de datos que deben correr una sola vez (para que despues se
+// puedan revertir desde la pestaña de Usuarios sin que el arranque las repita).
+db.exec(`
+  CREATE TABLE IF NOT EXISTS migraciones (
+    nombre TEXT PRIMARY KEY,
+    aplicada_at TEXT NOT NULL DEFAULT (datetime('now'))
+  )
+`);
+function migrarUnaVez(nombre, fn) {
+  if (db.prepare('SELECT 1 FROM migraciones WHERE nombre = ?').get(nombre)) return;
+  db.exec('BEGIN');
+  try {
+    fn();
+    db.prepare('INSERT INTO migraciones (nombre) VALUES (?)').run(nombre);
+    db.exec('COMMIT');
+  } catch (err) {
+    db.exec('ROLLBACK');
+    throw err;
+  }
+}
+
+// Las Torres cerro: se da de baja para que ya no aparezca en gastos, ingresos,
+// proyeccion, etc. Sus registros de meses pasados se conservan y siguen
+// apareciendo en el cierre de los meses donde tuvo actividad.
+migrarUnaVez('2026-11-baja-las-torres', () => {
+  db.prepare("UPDATE sucursales SET activa = 0 WHERE nombre = 'Las Torres'").run();
+});
+
 db.exec(`
   CREATE TABLE IF NOT EXISTS users (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
