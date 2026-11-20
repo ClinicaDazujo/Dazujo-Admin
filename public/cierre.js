@@ -144,6 +144,17 @@ function sucursalesDelNegocio() {
   return SUCURSALES;
 }
 
+// Renglones del tablero de un mes: las sucursales activas, mas las que ya se
+// dieron de baja pero tuvieron gastos o ingresos ese mes (para no perder su
+// historial ni descuadrar los totales de los cierres pasados).
+function sucursalesDelTablero(mes) {
+  const nombres = new Set(sucursalesDelNegocio());
+  const marca = marcaActual();
+  for (const g of GASTOS) if (g.marca === marca && g.fecha.slice(0, 7) === mes) nombres.add(g.sucursal);
+  for (const i of INGRESOS) if (i.marca === marca && i.mes === mes) nombres.add(i.sucursal);
+  return [...nombres];
+}
+
 function actualizarSucursalesUI() {
   const paraIngreso = sucursalesParaIngreso();
   const paraNegocio = sucursalesDelNegocio();
@@ -345,7 +356,7 @@ function renderTablero() {
   const filas =
     marcaActual() === 'laboratorio'
       ? [{ sucursal: 'Laboratorio', ...totales }]
-      : sucursalesDelNegocio().map((s) => ({ sucursal: s, ...resumen(mes, s) }));
+      : sucursalesDelTablero(mes).map((s) => ({ sucursal: s, ...resumen(mes, s) }));
 
   document.getElementById('clinicas-body').innerHTML = filas
     .map(

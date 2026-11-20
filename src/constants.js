@@ -13,7 +13,7 @@ const SUCURSALES_INICIALES = [
   'Cardenas',
   'Ixtlero',
   'Centro',
-  'Las Torres',
+  'Etnias',
   'Oficina',
 ];
 
